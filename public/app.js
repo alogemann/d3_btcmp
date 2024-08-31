@@ -1,46 +1,49 @@
-const data = [
-    {
-        'width': 200,
-        'height': 100,
-        'fill': 'purple'
-    }
-]
-const svg = d3.select('svg');
+const svg = d3.select('svg')
 
-const rect = svg.select('rect')
-    .data(data)
-    .attr('width', d => d.width)
-    .attr('height', d => d.height)
-    .attr('fill', d => d.fill)
+d3.json('menu.json').then(data => {
 
-console.log(rect)
-/* section 1 
-//constant vars
-const canvas = d3.select('.canvas')
-const svg = canvas.append('svg')
-    .attr('height',600)
-    .attr('width',600)
+    //create y scale
+    const y = d3.scaleLinear()
+        .domain([0,1000])
+        .range([0,250])
 
-const group = svg.append('g')
-    .attr('transform','translate(100,100)')
+    //join data to rects
+    const rects = svg.selectAll('rect')
+        .data(data)
 
-//append shapes to svg
-group.append('rect')
-    .attr('height', 100)
-    .attr('width', 200)
-    .attr('x',10)
-    .attr('y',10)
-    .attr('fill', 'blue')
+    //append data to rect in DOM
+    rects.attr('width', 50)
+        .attr('height', data => y(data.orders))
+        .attr('fill', 'orange')
+        .attr('x', (d,i) => i * 70)
 
-group.append('circle')
-    .attr('cx',300)
-    .attr('cy',60)
-    .attr('r',50)
-    .attr('fill', 'lightblue')
+    //append data to enter selection
+    rects.enter()
+        .append('rect')
+        .attr('width', 50)
+        .attr('height', data => y(data.orders))
+        .attr('fill', 'orange')
+        .attr('x', (d,i) => i * 70)
+})
 
-group.append('line')
-    .attr('x1', 370)
-    .attr('x2', 400)
-    .attr('y1', 20)
-    .attr('y2', 120)
-    .attr('stroke', 'black') */
+
+/* const svg = d3.select('svg');
+
+d3.json('planets.json')
+    .then(d => {
+        const circles = svg.selectAll('circle').data(d)
+
+        // add data to circles already in DOM
+        circles.attr('cy', 200)
+            .attr('cx', d=> d.distance)
+            .attr('r', d => d.radius)
+            .attr('fill', d => d.fill)
+        
+        //add circles and attr to enter selection
+        circles.enter()
+            .append('circle')
+            .attr('cy', 200)
+            .attr('cx', d=> d.distance)
+            .attr('r', d => d.radius)
+            .attr('fill', d => d.fill)
+    }) */
